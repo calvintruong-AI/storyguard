@@ -1,0 +1,102 @@
+[
+  {
+    "id": "TEST-001",
+    "intake_text": "Advisors need a better way to see client portfolio performance on the dashboard. It's too slow and hard to read right now.",
+    "domain": "wealth_management",
+    "hidden_nfrs": ["performance threshold for load time", "data refresh frequency", "role-based data access controls", "audit logging for portfolio views"],
+    "hidden_dependencies": ["portfolio management system", "custodian data feed", "authentication/SSO"],
+    "vagueness_traps": ["better way", "too slow", "hard to read"],
+    "expected_minimum_score": 3.0,
+    "notes": "Classic vague intake. Performance NFR is implied but no threshold stated. Data access controls critical in wealth management context."
+  },
+  {
+    "id": "TEST-002",
+    "intake_text": "We need to add two-factor authentication to the client portal. Compliance is asking for it.",
+    "domain": "compliance",
+    "hidden_nfrs": ["MFA method options (SMS, TOTP, email)", "fallback/recovery flow", "session timeout policy", "compliance regulation reference"],
+    "hidden_dependencies": ["identity provider / SSO", "notification service (SMS/email)", "client portal", "audit log service"],
+    "vagueness_traps": ["compliance is asking" — which regulation?, "add" — retrofit or new flow?],
+    "expected_minimum_score": 3.5,
+    "notes": "Urgency signal present (compliance request). Regulation should be named. Recovery flow is a critical missing acceptance criterion most BAs forget."
+  },
+  {
+    "id": "TEST-003",
+    "intake_text": "The document upload process for new account onboarding is broken. Clients are complaining it takes too long.",
+    "domain": "client_portal",
+    "hidden_nfrs": ["file size limits", "accepted file types", "upload timeout threshold", "error messaging standards", "document retention policy"],
+    "hidden_dependencies": ["document management system", "onboarding workflow engine", "client portal", "CRM", "compliance document review queue"],
+    "vagueness_traps": ["broken" — is it an error or just slow?, "too long" — no threshold defined],
+    "expected_minimum_score": 2.5,
+    "notes": "Root cause is ambiguous — 'broken' could mean error state or performance issue. Both paths have different acceptance criteria. Good test of intake parser disambiguation."
+  },
+  {
+    "id": "TEST-004",
+    "intake_text": "Build a way for advisors to flag high-risk clients and get alerts when their portfolio drops below a threshold.",
+    "domain": "wealth_management",
+    "hidden_nfrs": ["alert delivery SLA", "threshold configuration — who can set it?", "alert channel options", "compliance notification requirements for at-risk portfolios"],
+    "hidden_dependencies": ["portfolio management system", "CRM", "notification service", "risk scoring engine (if exists)", "audit log service"],
+    "vagueness_traps": ["high-risk" — by what definition?, "a threshold" — configurable or fixed?, "get alerts" — how? email, in-app, SMS?"],
+    "expected_minimum_score": 2.0,
+    "notes": "Three separate undefined parameters. Who defines 'high-risk'? Who sets the threshold? What constitutes an alert? Each is a stakeholder question."
+  },
+  {
+    "id": "TEST-005",
+    "intake_text": "We need to integrate with the new custodian data feed. Operations keeps manually reconciling because the current feed is unreliable.",
+    "domain": "integration",
+    "hidden_nfrs": ["data reconciliation frequency", "error handling for feed failures", "data integrity validation rules", "fallback behavior when feed is down", "audit trail for reconciliation"],
+    "hidden_dependencies": ["custodian API / SFTP", "portfolio management system", "reconciliation engine", "operations workflow", "audit log service", "data warehouse"],
+    "vagueness_traps": ["new custodian data feed" — which custodian?, "unreliable" — what failure mode specifically?],
+    "expected_minimum_score": 3.0,
+    "notes": "Integration stories have the most hidden dependencies. Custodian name should be identified. Feed failure handling is a critical NFR with compliance implications."
+  },
+  {
+    "id": "TEST-006",
+    "intake_text": "The reporting module needs to handle edge cases better. Sometimes it crashes when there's no data.",
+    "domain": "reporting",
+    "hidden_nfrs": ["null/empty state behavior standard", "error logging requirements", "report generation timeout", "data freshness requirements"],
+    "hidden_dependencies": ["reporting engine", "data warehouse", "portfolio management system", "notification service for report failures"],
+    "vagueness_traps": ["handle edge cases better" — which edge cases?, "crashes" — throws error? blank screen? timeout?],
+    "expected_minimum_score": 2.0,
+    "notes": "The word 'crashes' needs disambiguation before anything else. Is this a thrown exception, a blank UI, or a timeout? Each has different acceptance criteria."
+  },
+  {
+    "id": "TEST-007",
+    "intake_text": "Clients should be able to update their contact information themselves without calling the service desk.",
+    "domain": "client_portal",
+    "hidden_nfrs": ["identity verification before allowing changes", "change audit trail", "notification to advisor on client data change", "data validation rules (phone format, address verification)", "compliance — KYC re-verification on address change"],
+    "hidden_dependencies": ["client portal", "CRM", "identity verification service", "notification service", "KYC/AML system", "audit log service"],
+    "vagueness_traps": ["contact information" — which fields? all? subset?, "without calling" — self-service only or also includes chat?"],
+    "expected_minimum_score": 3.0,
+    "notes": "Address changes in financial services often trigger KYC re-verification requirements. This is the most important hidden compliance requirement in this intake."
+  },
+  {
+    "id": "TEST-008",
+    "intake_text": "We need audit logging for all advisor actions on client accounts. The audit team flagged this in the last review.",
+    "domain": "compliance",
+    "hidden_nfrs": ["log retention period (often 7 years for financial services)", "log immutability requirements", "access controls on log data", "log format standard (JSON, structured)", "real-time vs batch logging"],
+    "hidden_dependencies": ["audit log service", "all advisor-facing systems (CRM, portfolio, portal)", "SIEM or log aggregation tool", "compliance reporting system"],
+    "vagueness_traps": ["all advisor actions" — truly all? or specific categories?, "client accounts" — all clients or specific account types?"],
+    "expected_minimum_score": 4.0,
+    "notes": "This is the most compliance-heavy intake. Retention period and immutability are critical NFRs. The scope of 'all actions' needs definition to be implementable."
+  },
+  {
+    "id": "TEST-009",
+    "intake_text": "The mobile app needs to support bulk document signing for clients with multiple accounts.",
+    "domain": "client_portal",
+    "hidden_nfrs": ["e-signature legal compliance (ESIGN Act, UETA)", "bulk operation performance threshold", "partial completion handling", "document storage and retrieval post-signature", "mobile-specific security requirements"],
+    "hidden_dependencies": ["e-signature service (DocuSign, Adobe Sign)", "document management system", "mobile app", "client authentication", "audit log service", "CRM"],
+    "vagueness_traps": ["bulk" — how many documents?, "multiple accounts" — what's the max?],
+    "expected_minimum_score": 3.5,
+    "notes": "E-signature compliance (ESIGN/UETA) is a legal requirement that must be called out. Partial completion handling is a critical edge case — what if a client signs 3 of 5 documents?"
+  },
+  {
+    "id": "TEST-010",
+    "intake_text": "Improve the search functionality in the client database. Right now you can only search by last name.",
+    "domain": "wealth_management",
+    "hidden_nfrs": ["search performance at scale (database size?)", "PII handling in search results", "role-based result filtering", "search audit logging (who searched for whom)"],
+    "hidden_dependencies": ["client database", "search index service (if applicable)", "CRM", "authentication/authorization service", "audit log service"],
+    "vagueness_traps": ["improve" — what additional fields?, "client database" — which one? CRM? proprietary?"],
+    "expected_minimum_score": 2.5,
+    "notes": "Search in financial services requires audit logging — who searched for a client record is itself a compliance data point. Role-based filtering ensures advisors only see their clients."
+  }
+]

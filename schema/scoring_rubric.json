@@ -1,0 +1,205 @@
+{
+  "rubric_version": "1.0.0",
+  "title": "StoryGuard Requirements Completeness Scoring Rubric",
+  "description": "5-dimension rubric, 2 points per dimension, 10 points maximum. A story scoring below 8.0 is not sprint-ready. Use this rubric in the PROMPT_06 governance and scoring step.",
+  "total_max_score": 10,
+  "sprint_ready_threshold": 8.0,
+  "grade_thresholds": {
+    "sprint_ready": { "min": 8.0, "max": 10.0, "action": "Proceed to sprint after BA approval" },
+    "needs_review": { "min": 5.0, "max": 7.9, "action": "BA must address improvement suggestions before sprint entry" },
+    "incomplete": { "min": 3.0, "max": 4.9, "action": "Return to stakeholder for clarification on missing fields" },
+    "blocked": { "min": 0.0, "max": 2.9, "action": "Do not proceed — intake insufficient for story creation" }
+  },
+  "dimensions": [
+    {
+      "id": "story_clarity",
+      "name": "Story Clarity",
+      "max_points": 2,
+      "weight": "20%",
+      "description": "Is the user story specific, unambiguous, and actionable?",
+      "scoring": {
+        "0": {
+          "label": "Vague",
+          "criteria": [
+            "Story contains language like 'improve', 'better', 'handle', 'appropriate', 'ensure quality'",
+            "The 'I want' statement could be interpreted multiple ways by different engineers",
+            "Persona is 'user' or 'stakeholder' rather than a named role",
+            "Business value in 'so that' is not measurable or observable"
+          ]
+        },
+        "1": {
+          "label": "Mostly Clear",
+          "criteria": [
+            "Story is mostly specific with 1-2 minor ambiguities that a senior engineer could reasonably interpret",
+            "Persona is named but may be too broad (e.g., 'employee' vs 'financial advisor')",
+            "Business value is stated but not measurable"
+          ]
+        },
+        "2": {
+          "label": "Implementation Ready",
+          "criteria": [
+            "No vague language — every term is specific and unambiguous",
+            "Persona is a specific named role with clear context",
+            "The 'I want' has exactly one reasonable interpretation",
+            "Business value is measurable or directly observable"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nfr_coverage",
+      "name": "Non-Functional Requirements Coverage",
+      "max_points": 2,
+      "weight": "20%",
+      "description": "Are NFRs defined across all 5 categories appropriate to the domain?",
+      "scoring": {
+        "0": {
+          "label": "Missing",
+          "criteria": [
+            "Fewer than 2 NFR categories addressed",
+            "All NFRs marked as MISSING with no specifics",
+            "Performance, security, compliance all absent for a story that clearly requires them"
+          ]
+        },
+        "1": {
+          "label": "Partial",
+          "criteria": [
+            "2-3 NFR categories addressed with specific requirements",
+            "At least 1 NFR confirmed or inferred with a specific threshold",
+            "Some NFRs marked MISSING but with clear questions for the stakeholder"
+          ]
+        },
+        "2": {
+          "label": "Complete",
+          "criteria": [
+            "All 5 NFR categories addressed (performance, security, compliance, reliability, auditability)",
+            "Each NFR has a specific, measurable requirement or a clear 'MISSING: [question]'",
+            "Compliance requirements include specific regulation names where applicable",
+            "Auditability requirements defined for all stories touching financial data"
+          ]
+        }
+      },
+      "financial_services_note": "In wealth management and financial services, auditability is rarely 'not_applicable'. When in doubt, require it."
+    },
+    {
+      "id": "dependency_identification",
+      "name": "System Dependency Identification",
+      "max_points": 2,
+      "weight": "20%",
+      "description": "Are upstream and downstream system dependencies mapped with risk context?",
+      "scoring": {
+        "0": {
+          "label": "Not Mapped",
+          "criteria": [
+            "No upstream or downstream dependencies identified",
+            "No data sources identified for a story that clearly involves data retrieval or storage"
+          ]
+        },
+        "1": {
+          "label": "Partially Mapped",
+          "criteria": [
+            "Primary upstream dependency identified but secondary dependencies missing",
+            "Downstream impacts identified but without risk context",
+            "Data sources identified but PII flag not assessed"
+          ]
+        },
+        "2": {
+          "label": "Fully Mapped",
+          "criteria": [
+            "All upstream dependencies identified with dependency type and risk note",
+            "All downstream systems identified with impact description",
+            "External integrations named where applicable",
+            "Data sources identified with read/write operation and PII flag",
+            "All dependencies have a validation status (confirmed, inferred, requires_validation)"
+          ]
+        }
+      }
+    },
+    {
+      "id": "acceptance_criteria_testability",
+      "name": "Acceptance Criteria Testability",
+      "max_points": 2,
+      "weight": "20%",
+      "description": "Are acceptance criteria binary, specific, and independently verifiable?",
+      "scoring": {
+        "0": {
+          "label": "Untestable",
+          "criteria": [
+            "Criteria contain subjective language ('the system works correctly', 'performance is acceptable')",
+            "Fewer than 3 acceptance criteria",
+            "No error handling or edge case criteria",
+            "Then statements are not observable"
+          ]
+        },
+        "1": {
+          "label": "Mostly Testable",
+          "criteria": [
+            "3-4 acceptance criteria, mostly binary",
+            "Happy path covered but edge cases or error handling missing",
+            "Some criteria are specific but 1-2 have subjective language"
+          ]
+        },
+        "2": {
+          "label": "Fully Testable",
+          "criteria": [
+            "Minimum 4 criteria: 2 happy path, 1 edge case, 1 error handling",
+            "Every criterion is binary — unambiguous pass or fail",
+            "At least 1 compliance or audit criterion for financial services stories",
+            "All 'Then' statements are specific and observable",
+            "Negative tests documented for critical error scenarios"
+          ]
+        }
+      }
+    },
+    {
+      "id": "assumption_transparency",
+      "name": "Assumption Transparency",
+      "max_points": 2,
+      "weight": "20%",
+      "description": "Are AI inferences documented with validation questions for the BA?",
+      "scoring": {
+        "0": {
+          "label": "Opaque",
+          "criteria": [
+            "No assumptions documented",
+            "AI-generated content presented as fact without distinguishing inferred from stated",
+            "No missing information flagged"
+          ]
+        },
+        "1": {
+          "label": "Partially Transparent",
+          "criteria": [
+            "Some assumptions documented but not all",
+            "Missing information flagged but without specific questions for the stakeholder",
+            "Hallucination flags missing for high-risk inferences"
+          ]
+        },
+        "2": {
+          "label": "Fully Transparent",
+          "criteria": [
+            "Every AI inference documented as an assumption with confidence level",
+            "Each assumption has a specific validation question for the BA",
+            "Hallucination flags present for any claim not supported by intake",
+            "Missing information listed with exact questions to ask the stakeholder",
+            "The BA can clearly distinguish what was stated vs inferred vs assumed"
+          ]
+        }
+      }
+    }
+  ],
+  "score_interpretation": {
+    "10.0": "Exceptional — story could go directly to engineering with minimal BA review",
+    "8.0-9.9": "Sprint ready — BA review and approval recommended before sprint entry",
+    "6.0-7.9": "Needs improvement — address flagged items before sprint entry",
+    "4.0-5.9": "Incomplete — requires stakeholder follow-up on multiple gaps",
+    "2.0-3.9": "Significantly incomplete — return to stakeholder before continuing",
+    "0.0-1.9": "Blocked — intake insufficient, start elicitation process over"
+  },
+  "baseline_comparison": {
+    "description": "Use this to measure StoryGuard's impact. Score the raw intake before enrichment, then score the enriched output.",
+    "typical_raw_intake_score": "2.0-3.5",
+    "target_enriched_score": "7.5-9.0",
+    "expected_improvement": "4-6 point increase",
+    "how_to_score_raw_intake": "Apply the same rubric to the raw intake text as if it were a requirements document. Most raw intakes score 0-1 on NFRs, 0 on dependencies, 0-1 on acceptance criteria, 0 on assumptions."
+  }
+}

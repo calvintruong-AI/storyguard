@@ -1,0 +1,334 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StoryGuard Requirements Output Schema",
+  "description": "Structured, implementation-ready requirements document for AI coding agent consumption. Every field is required unless marked optional. Vague or ambiguous values are not acceptable — if information is unavailable, mark the field as INFERRED or MISSING with a brief explanation.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "metadata",
+    "user_story",
+    "personas",
+    "functional_requirements",
+    "non_functional_requirements",
+    "acceptance_criteria",
+    "system_dependencies",
+    "governance",
+    "quality_score"
+  ],
+  "properties": {
+
+    "metadata": {
+      "type": "object",
+      "description": "Administrative context for this requirements document",
+      "required": ["story_id", "intake_text", "domain", "generated_at", "pipeline_version"],
+      "properties": {
+        "story_id": { "type": "string", "description": "Auto-generated unique ID. Format: SG-YYYY-NNN" },
+        "intake_text": { "type": "string", "description": "The original raw intake text verbatim — never modified" },
+        "domain": {
+          "type": "string",
+          "enum": ["wealth_management", "saas_delivery", "compliance", "operations", "client_portal", "reporting", "integration", "unknown"],
+          "description": "Business domain inferred from intake context"
+        },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "pipeline_version": { "type": "string", "default": "1.0.0" }
+      }
+    },
+
+    "user_story": {
+      "type": "object",
+      "description": "The core user story in standard format",
+      "required": ["as_a", "i_want", "so_that", "business_value", "priority_signal"],
+      "properties": {
+        "as_a": {
+          "type": "string",
+          "description": "The specific user persona. Never use 'user' — must be a named role e.g. 'financial advisor', 'compliance officer', 'client'. If unknown, mark INFERRED and explain."
+        },
+        "i_want": {
+          "type": "string",
+          "description": "The specific capability or outcome requested. Must be actionable and unambiguous. No vague language like 'better', 'improve', 'handle'. If intake is vague, translate to a specific capability."
+        },
+        "so_that": {
+          "type": "string",
+          "description": "The business outcome or value delivered. Must be measurable or observable."
+        },
+        "business_value": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Relative business value based on domain context and stated urgency"
+        },
+        "priority_signal": {
+          "type": "string",
+          "description": "Any urgency, compliance deadline, or stakeholder signal in the intake that implies priority"
+        }
+      }
+    },
+
+    "personas": {
+      "type": "array",
+      "description": "All user types who will interact with or be affected by this story",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "interaction_type", "primary"],
+        "properties": {
+          "role": { "type": "string", "description": "Named role e.g. 'Financial Advisor', 'Compliance Officer', 'End Client', 'System Admin'" },
+          "interaction_type": {
+            "type": "string",
+            "enum": ["primary_user", "secondary_user", "admin", "approver", "system", "affected_but_not_user"],
+            "description": "How this persona interacts with the feature"
+          },
+          "primary": { "type": "boolean", "description": "True for the main persona the story is written for" },
+          "needs": { "type": "string", "description": "What this persona specifically needs from this feature" }
+        }
+      }
+    },
+
+    "functional_requirements": {
+      "type": "array",
+      "description": "Explicit, testable functional behaviors the system must exhibit. Each requirement must be independently verifiable.",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "requirement", "source", "testable"],
+        "properties": {
+          "id": { "type": "string", "description": "Format: FR-001, FR-002 etc." },
+          "requirement": {
+            "type": "string",
+            "description": "Specific system behavior. Must start with 'The system shall' or 'The system must'. No vague language."
+          },
+          "source": {
+            "type": "string",
+            "enum": ["stated", "inferred", "standard_practice"],
+            "description": "Whether this came directly from intake, was inferred from context, or is standard practice for this domain"
+          },
+          "testable": { "type": "boolean", "description": "Can this requirement be verified with a specific test case?" }
+        }
+      }
+    },
+
+    "non_functional_requirements": {
+      "type": "object",
+      "description": "Quality attributes the system must exhibit. In financial services, these are compliance requirements — not optional enhancements.",
+      "required": ["performance", "security", "compliance", "reliability", "auditability"],
+      "properties": {
+        "performance": {
+          "type": "object",
+          "required": ["status", "requirement"],
+          "properties": {
+            "status": { "type": "string", "enum": ["confirmed", "inferred", "missing", "not_applicable"] },
+            "requirement": { "type": "string", "description": "Specific threshold e.g. 'Page load under 2 seconds for 95th percentile'. If MISSING, explain what should be defined." },
+            "source": { "type": "string" }
+          }
+        },
+        "security": {
+          "type": "object",
+          "required": ["status", "requirement"],
+          "properties": {
+            "status": { "type": "string", "enum": ["confirmed", "inferred", "missing", "not_applicable"] },
+            "requirement": { "type": "string", "description": "Authentication, authorization, data encryption, session management requirements" },
+            "source": { "type": "string" }
+          }
+        },
+        "compliance": {
+          "type": "object",
+          "required": ["status", "requirement"],
+          "properties": {
+            "status": { "type": "string", "enum": ["confirmed", "inferred", "missing", "not_applicable"] },
+            "requirement": { "type": "string", "description": "Regulatory requirements — SEC, FINRA, SOC2, GDPR, state-level financial regulations as applicable" },
+            "regulations_flagged": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Specific regulations this story may touch"
+            }
+          }
+        },
+        "reliability": {
+          "type": "object",
+          "required": ["status", "requirement"],
+          "properties": {
+            "status": { "type": "string", "enum": ["confirmed", "inferred", "missing", "not_applicable"] },
+            "requirement": { "type": "string", "description": "Uptime, error handling, failover, data integrity requirements" }
+          }
+        },
+        "auditability": {
+          "type": "object",
+          "required": ["status", "requirement"],
+          "properties": {
+            "status": { "type": "string", "enum": ["confirmed", "inferred", "missing", "not_applicable"] },
+            "requirement": { "type": "string", "description": "What actions must be logged, by whom, for how long, and who can access logs. Critical for financial services." }
+          }
+        }
+      }
+    },
+
+    "acceptance_criteria": {
+      "type": "array",
+      "description": "Testable Given/When/Then criteria. Every acceptance criterion must be binary — it either passes or fails. No subjective language.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "given", "when", "then", "test_type"],
+        "properties": {
+          "id": { "type": "string", "description": "Format: AC-001, AC-002 etc." },
+          "given": { "type": "string", "description": "The precondition or starting state" },
+          "when": { "type": "string", "description": "The action or event that triggers the behavior" },
+          "then": { "type": "string", "description": "The expected, observable, measurable outcome. Must be binary — pass or fail." },
+          "test_type": {
+            "type": "string",
+            "enum": ["happy_path", "edge_case", "error_handling", "performance", "security", "compliance"],
+            "description": "The category of test this criterion covers"
+          },
+          "negative_test": {
+            "type": "string",
+            "description": "Optional — the corresponding failure scenario that should NOT happen"
+          }
+        }
+      }
+    },
+
+    "system_dependencies": {
+      "type": "object",
+      "description": "All systems this story touches upstream or downstream. Missing dependencies are a primary cause of sprint blockage.",
+      "required": ["upstream", "downstream", "external_integrations", "data_sources"],
+      "properties": {
+        "upstream": {
+          "type": "array",
+          "description": "Systems that provide data or services this story depends on",
+          "items": {
+            "type": "object",
+            "required": ["system", "dependency_type", "status"],
+            "properties": {
+              "system": { "type": "string" },
+              "dependency_type": { "type": "string", "enum": ["data_source", "auth_provider", "api_dependency", "event_trigger"] },
+              "status": { "type": "string", "enum": ["confirmed", "inferred", "requires_validation"] },
+              "risk": { "type": "string", "description": "What breaks if this dependency is unavailable or changes" }
+            }
+          }
+        },
+        "downstream": {
+          "type": "array",
+          "description": "Systems or processes that will be affected by changes in this story",
+          "items": {
+            "type": "object",
+            "required": ["system", "impact", "status"],
+            "properties": {
+              "system": { "type": "string" },
+              "impact": { "type": "string", "description": "How this story's changes affect the downstream system" },
+              "status": { "type": "string", "enum": ["confirmed", "inferred", "requires_validation"] }
+            }
+          }
+        },
+        "external_integrations": {
+          "type": "array",
+          "description": "Third-party APIs, custodians, data feeds, or vendor systems",
+          "items": { "type": "string" }
+        },
+        "data_sources": {
+          "type": "array",
+          "description": "Databases, data warehouses, or data feeds this story reads from or writes to",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": { "type": "string" },
+              "operation": { "type": "string", "enum": ["read", "write", "read_write"] },
+              "pii_involved": { "type": "boolean", "description": "Does this data source contain personally identifiable information?" }
+            }
+          }
+        }
+      }
+    },
+
+    "governance": {
+      "type": "object",
+      "description": "AI governance layer — transparency about what was inferred, what was assumed, and what risks exist",
+      "required": ["pii_check", "assumptions", "hallucination_flags", "missing_information", "human_review_required"],
+      "properties": {
+        "pii_check": {
+          "type": "object",
+          "required": ["performed", "result"],
+          "properties": {
+            "performed": { "type": "boolean", "description": "Whether PII check was run on intake text (via local Ollama)" },
+            "result": { "type": "string", "enum": ["clean", "flagged", "skipped"] },
+            "flagged_terms": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Any terms flagged as potentially sensitive"
+            }
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "description": "Every inference made by the AI that was not explicitly stated in the intake. The BA must validate each one.",
+          "items": {
+            "type": "object",
+            "required": ["assumption", "confidence", "validation_needed"],
+            "properties": {
+              "assumption": { "type": "string", "description": "What was assumed" },
+              "confidence": { "type": "string", "enum": ["high", "medium", "low"], "description": "How confident the model is in this assumption based on domain context" },
+              "validation_needed": { "type": "string", "description": "What the BA should verify with the business stakeholder" }
+            }
+          }
+        },
+        "hallucination_flags": {
+          "type": "array",
+          "description": "Any specific claims in this document that may not be supported by the intake and should be verified before the story enters a sprint",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": { "type": "string", "description": "Which field/section contains the potential hallucination" },
+              "concern": { "type": "string", "description": "What specifically may not be accurate" }
+            }
+          }
+        },
+        "missing_information": {
+          "type": "array",
+          "description": "Information that is required for a complete story but was not available in the intake or knowledge base",
+          "items": {
+            "type": "object",
+            "required": ["field", "question_for_stakeholder"],
+            "properties": {
+              "field": { "type": "string" },
+              "question_for_stakeholder": { "type": "string", "description": "The specific question the BA should ask to fill this gap" }
+            }
+          }
+        },
+        "human_review_required": {
+          "type": "boolean",
+          "description": "Always true — no AI output enters a sprint without BA approval"
+        }
+      }
+    },
+
+    "quality_score": {
+      "type": "object",
+      "description": "Completeness and quality assessment of this requirements document",
+      "required": ["total_score", "max_score", "dimension_scores", "grade", "ready_for_sprint"],
+      "properties": {
+        "total_score": { "type": "number", "minimum": 0, "maximum": 10 },
+        "max_score": { "type": "number", "default": 10 },
+        "dimension_scores": {
+          "type": "object",
+          "description": "Score breakdown by dimension (each out of 2)",
+          "properties": {
+            "story_clarity": { "type": "number", "minimum": 0, "maximum": 2 },
+            "nfr_coverage": { "type": "number", "minimum": 0, "maximum": 2 },
+            "dependency_identification": { "type": "number", "minimum": 0, "maximum": 2 },
+            "acceptance_criteria_testability": { "type": "number", "minimum": 0, "maximum": 2 },
+            "assumption_transparency": { "type": "number", "minimum": 0, "maximum": 2 }
+          }
+        },
+        "grade": {
+          "type": "string",
+          "enum": ["sprint_ready", "needs_review", "incomplete", "blocked"],
+          "description": "sprint_ready: 8-10 | needs_review: 5-7 | incomplete: 3-4 | blocked: 0-2"
+        },
+        "ready_for_sprint": { "type": "boolean", "description": "True only if total_score >= 8.0 AND no hallucination_flags AND pii_check is clean" },
+        "improvement_suggestions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Specific actions the BA can take to raise the score before sprint entry"
+        }
+      }
+    }
+  }
+}
