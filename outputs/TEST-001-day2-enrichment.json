@@ -1,0 +1,198 @@
+[
+  
+{
+  
+  
+"enriched": {
+  
+  
+  
+"user_story": {
+  
+  
+  
+  
+"as_a": "Portfolio Manager",
+  
+  
+  
+  
+"i_want": "automated daily portfolio performance reports delivered to my email inbox at 7 AM EST",
+  
+  
+  
+  
+"so_that": "I can review client portfolio performance before market open and prepare for client conversations",
+  
+  
+  
+  
+"business_value": "high",
+  
+  
+  
+  
+"priority_signal": null
+  
+  
+  
+},
+  
+  
+  
+"personas": [
+  
+  
+  
+  
+{
+  
+  
+  
+  
+  
+"role": "Portfolio Manager",
+  
+  
+  
+  
+  
+"interaction_type": "primary_user",
+  
+  
+  
+  
+  
+"primary": true,
+  
+  
+  
+  
+  
+"needs": "Automated delivery of portfolio performance data at a specific time to enable timely client service and investment decision-making"
+  
+  
+  
+  
+},
+  
+  
+  
+  
+{
+  
+  
+  
+  
+  
+"role": "Compliance Officer",
+  
+  
+  
+  
+  
+"interaction_type": "secondary_user",
+  
+  
+  
+  
+  
+"primary": false,
+  
+  
+  
+  
+  
+"needs": "Audit trail of all automated report generation and delivery to ensure regulatory compliance and data access monitoring"
+  
+  
+  
+  
+},
+  
+  
+  
+  
+{
+  
+  
+  
+  
+  
+"role": "System Administrator",
+  
+  
+  
+  
+  
+"interaction_type": "admin",
+  
+  
+  
+  
+  
+"primary": false,
+  
+  
+  
+  
+  
+"needs": "Ability to configure, monitor, and troubleshoot the automated report delivery system including scheduling and email delivery status"
+  
+  
+  
+  
+}
+  
+  
+  
+],
+  
+  
+  
+"functional_requirements": [
+  
+  
+  
+  
+{
+  
+  
+  
+  
+  
+"id": "FR-001",
+  
+  
+  
+  
+  
+"requirement": "The system shall generate portfolio performance reports automatically at 7:00 AM Eastern Standard Time daily",
+  
+  
+  
+  
+  
+"source": "stated",
+  
+  
+  
+  
+  
+"testable": true
+  
+  
+  
+  
+},
+  
+  
+  
+  
+{
+  
+  
+  
+  
+  
+"id": "FR-002",
