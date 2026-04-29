@@ -45,11 +45,10 @@ echo "The document upload process is too slow for new clients." > /tmp/test_inta
 python3 scripts/pii_check.py --file /tmp/test_intake.txt --pretty
 ```
 
-### Hour 2 — Manual pipeline test (60 min)
-Before wiring into n8n, run the pipeline manually using the Claude API directly.
-This validates your prompts before you build the workflow.
-
-Use these Claude Code session prompts (see section below).
+### Hour 2 — Manual pipeline test (60 min) ✓ COMPLETE
+Steps 1–3 (PII check, intake parse, requirements enrichment) validated for TEST-001.
+Output saved to `outputs/TEST-001-day2-enrichment.json`.
+Steps 4–6 (NFR probe, AC + dependency mapping, governance audit/score) are next.
 
 ### Hour 3 — n8n workflow skeleton (30-60 min)
 1. Open n8n
@@ -190,7 +189,7 @@ Run each of the 10 test cases through the pipeline and record scores here:
 
 | Test Case | Domain | Raw Score | Enriched Score | Delta | Grade |
 |-----------|--------|-----------|----------------|-------|-------|
-| TEST-001  | Wealth Mgmt | ~2.5 | ? | ? | ? |
+| TEST-001  | Wealth Mgmt | ~2.5 | — steps 4–6 pending — | ? | ? |
 | TEST-002  | Compliance | ~3.5 | ? | ? | ? |
 | TEST-003  | Client Portal | ~2.0 | ? | ? | ? |
 | TEST-004  | Wealth Mgmt | ~1.5 | ? | ? | ? |
@@ -201,5 +200,15 @@ Run each of the 10 test cases through the pipeline and record scores here:
 | TEST-009  | Client Portal | ~3.0 | ? | ? | ? |
 | TEST-010  | Wealth Mgmt | ~2.0 | ? | ? | ? |
 
-Expected average improvement: 4-6 points per story.
+Expected average improvement: 4–6 points per story.
 This table goes in your GitHub README and is your demo's headline metric.
+
+---
+
+## Where Day 2 starts
+
+1. Complete Steps 4–6 for TEST-001 using the prompts in `prompts/pipeline_prompts.txt`
+2. Save full output to `outputs/TEST-001-complete.json`
+3. Wire n8n workflow HTTP nodes (Claude API credentials + prompt variables)
+4. Run TEST-002 through the live pipeline end to end
+5. Log both scores to Google Sheets — see `docs/SHEETS_SETUP.md` for integration setup

@@ -81,17 +81,39 @@ StoryGuard is built **governance-first**, not speed-first. Three layers:
 
 ---
 
+## Build Status
+
+| Phase | Status |
+|-------|--------|
+| Schema + scoring rubric | Complete |
+| Prompt chain (6 steps) | Complete |
+| PII check script (Ollama) | Complete |
+| Google Sheets logger script | Complete |
+| TEST-001 — Steps 1–3 (enrichment) | Complete — output in `outputs/` |
+| TEST-001 — Steps 4–6 (NFR probe, AC map, audit/score) | In progress |
+| n8n workflow wiring | In progress |
+| All 10 test cases — full pipeline | Pending |
+| Slack approval + Google Docs output | Pending |
+| Knowledge base population | Pending |
+
+---
+
 ## Results (10 Test Cases — Wealth Management Domain)
 
-| Metric | Before StoryGuard | After StoryGuard |
-|--------|-------------------|------------------|
-| Avg completeness score | ~2.5 / 10 | ~8.1 / 10 |
-| Stories with NFRs defined | 0 / 10 | 10 / 10 |
-| Stories with dependencies mapped | 0 / 10 | 10 / 10 |
-| Stories with testable AC | 1 / 10 | 10 / 10 |
-| Governance assumptions documented | 0 / 10 | 10 / 10 |
+| Test Case | Domain | Raw Score | Enriched Score | Delta | Grade |
+|-----------|--------|-----------|----------------|-------|-------|
+| TEST-001 | Wealth Mgmt | ~2.5 | — steps 4–6 pending — | ? | ? |
+| TEST-002 | Compliance | ~3.5 | ? | ? | ? |
+| TEST-003 | Client Portal | ~2.0 | ? | ? | ? |
+| TEST-004 | Wealth Mgmt | ~1.5 | ? | ? | ? |
+| TEST-005 | Integration | ~2.5 | ? | ? | ? |
+| TEST-006 | Reporting | ~1.5 | ? | ? | ? |
+| TEST-007 | Client Portal | ~2.5 | ? | ? | ? |
+| TEST-008 | Compliance | ~3.5 | ? | ? | ? |
+| TEST-009 | Client Portal | ~3.0 | ? | ? | ? |
+| TEST-010 | Wealth Mgmt | ~2.0 | ? | ? | ? |
 
-*Results will be updated as test cases are run through live pipeline*
+*Expected average improvement: 4–6 points per story. Table updated as test cases complete.*
 
 ---
 
@@ -109,9 +131,12 @@ storyguard/
 ├── scripts/
 │   ├── pii_check.py               # Local PII detection via Ollama
 │   └── log_to_sheets.py           # Google Sheets scorecard logger
+├── outputs/                       # Pipeline run results (JSON)
+│   └── TEST-001-day2-enrichment.json
 ├── knowledge_base/                # Past stories + NFR standards (RAG source)
 └── docs/
-    └── DAY1_QUICKSTART.md         # Setup and first run guide
+    ├── DAY1_QUICKSTART.md         # Setup and first run guide
+    └── SHEETS_SETUP.md            # Google Sheets integration setup
 ```
 
 ---
@@ -119,7 +144,7 @@ storyguard/
 ## Built With
 
 - Claude Code CLI (development environment and prompt iteration)
-- Anthropic Claude API (claude-sonnet-4-20250514)
+- Anthropic Claude API (claude-sonnet-4-6)
 - n8n self-hosted workflow automation
 - Ollama with llama3 (local governance layer)
 
