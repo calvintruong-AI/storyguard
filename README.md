@@ -90,8 +90,8 @@ StoryGuard is built **governance-first**, not speed-first. Three layers:
 | PII check script (Ollama) | Complete |
 | Google Sheets logger script | Complete |
 | TEST-001 — Steps 1–3 (enrichment) | Complete — output in `outputs/` |
-| TEST-001 — Steps 4–6 (NFR probe, AC map, audit/score) | In progress |
-| n8n workflow wiring | In progress |
+| TEST-001 — Steps 4–6 (NFR probe, AC map, audit/score) | Pending |
+| n8n workflow wiring | Pending |
 | All 10 test cases — full pipeline | Pending |
 | Slack approval + Google Docs output | Pending |
 | Knowledge base population | Pending |
